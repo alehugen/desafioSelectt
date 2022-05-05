@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import getAPI from '../services/index'
-import { Table } from 'react-bootstrap'
-import { Dropdown } from 'react-bootstrap'
+import { Button, Form, Table } from 'react-bootstrap'
 
 export function Leads(data) {
   const [leadName, setLeadName] = useState([])
   const [leadData, setLeadData] = useState([])
-  const [category, setCategory] = useState([])
+  const [category, setCategory] = useState(null)
 
   async function getData() {
     const data = await getAPI()
@@ -23,28 +22,36 @@ export function Leads(data) {
       <input
         type="text"
         placeholder="Busque pelo nome do contato"
-        className="p-2 m-2 w-50 rounded text-center"
+        className="d-flex justify-content-center p-2 m-2 w-25 rounded"
         onChange={({ target }) => setLeadName(target.value)}
       />
-      <form>
-        <label htmlFor="category" className="text-center p-2 fst-italic">
-          Encontra a empresa por categoria:
-          <select
-            name="category"
-            id="category"
-            onChange={({ target }) => setCategory(target.value)}
-            className="form-select form-select-sm m-3"
-          >
-            {leadData &&
-              leadData.map(lead => (
-                <option key={lead} value={lead.company.bs}>
-                  {lead.company.bs}
-                </option>
-              ))}
-          </select>
-        </label>
-      </form>
-      <Table striped bordered hover variant="dark" className="m-2 w-75">
+      <span className="d-flex justify-content-center">
+        Encontre a empresa por categoria:
+      </span>
+      <Form.Select
+        className="w-25"
+        onChange={({ target }) => setCategory(target.value)}
+      >
+        {leadData.map(lead => (
+          <option value={lead.company.bs} key={lead.id}>
+            {lead.company.bs}
+          </option>
+        ))}
+      </Form.Select>
+      <Button
+        variant="dark"
+        className="d-flex justify-content-center m-2 p-2 fst-italic"
+        onClick={() => setCategory(null)}
+      >
+        Limpar categoria
+      </Button>
+      <Table
+        striped
+        bordered
+        hover
+        variant="dark"
+        className="w-100 text-center"
+      >
         <thead>
           <tr>
             <th>Nome</th>
@@ -54,17 +61,27 @@ export function Leads(data) {
           </tr>
         </thead>
         <tbody>
-          {leadData &&
-            leadData
-              .filter(lead => lead.name.toLowerCase().includes(leadName))
-              .map(lead => (
-                <tr>
-                  <td>{lead.name}</td>
-                  <td>{lead.company.name}</td>
-                  <td>{lead.email}</td>
-                  <td>{lead.phone}</td>
-                </tr>
-              ))}
+          {leadData && category === null
+            ? leadData
+                .filter(lead => lead.name.toLowerCase().includes(leadName))
+                .map(lead => (
+                  <tr>
+                    <td>{lead.name}</td>
+                    <td>{lead.company.name}</td>
+                    <td>{lead.email}</td>
+                    <td>{lead.phone}</td>
+                  </tr>
+                ))
+            : leadData
+                .filter(lead => lead.company.bs === category)
+                .map(lead => (
+                  <tr>
+                    <td>{lead.name}</td>
+                    <td>{lead.company.name}</td>
+                    <td>{lead.email}</td>
+                    <td>{lead.phone}</td>
+                  </tr>
+                ))}
         </tbody>
       </Table>
     </>
