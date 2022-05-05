@@ -18,18 +18,16 @@ export function Leads(data) {
 
   return (
     <>
-      <h2 className="text-center p-2 fw-light fst-italic">Encontre Leads</h2>
+      <h2 className="p-2 fw-light fst-italic">Leads</h2>
       <input
         type="text"
         placeholder="Busque pelo nome do contato"
         className="d-flex justify-content-center p-2 m-2 w-25 rounded"
         onChange={({ target }) => setLeadName(target.value)}
       />
-      <span className="d-flex justify-content-center">
-        Encontre a empresa por categoria:
-      </span>
+      <span className="m-2 fst-italic">Selecione ou limpe a categoria:</span>
       <Form.Select
-        className="w-25"
+        className="d-flex justify-content-center w-25 m-2 mb-2 fst-italic"
         onChange={({ target }) => setCategory(target.value)}
       >
         {leadData.map(lead => (
@@ -40,7 +38,7 @@ export function Leads(data) {
       </Form.Select>
       <Button
         variant="dark"
-        className="d-flex justify-content-center m-2 p-2 fst-italic"
+        className="d-flex justify-content-center m-2 mb-4 p-2 fst-italic"
         onClick={() => setCategory(null)}
       >
         Limpar categoria
